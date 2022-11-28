@@ -83,7 +83,25 @@ export default class HelloWorldScene extends Phaser.Scene {
     // this.totalDelta = 0;
     // this.birdMove();
 
-    if (this.bird) this.resetPlayerPosition();
+    this.resetPlayerPosition();
+    this.recyclePipes();
+  }
+
+  // Recreate pipes
+  recyclePipes() {
+    const tempPipes = <Phaser.Types.Physics.Arcade.SpriteWithDynamicBody[]>[];
+    const pipes = <Phaser.Physics.Arcade.Group>this.pipes;
+    pipes.getChildren().forEach((pipe: any) => {
+      if (pipe.getBounds().right <= 0) {
+        tempPipes.push(pipe);
+        if (tempPipes.length === 2) {
+          this.placePipe(
+            tempPipes[tempPipes.length - 2],
+            tempPipes[tempPipes.length - 1]
+          );
+        }
+      }
+    });
   }
 
   birdMove() {
